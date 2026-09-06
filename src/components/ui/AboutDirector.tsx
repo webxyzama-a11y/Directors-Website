@@ -29,12 +29,16 @@ export default function AboutDirector() {
   ];
 
   return (
-    <section id="about" className="relative w-full py-24 sm:py-32 px-4 sm:px-8 md:px-12 lg:px-16 bg-gradient-to-b from-transparent via-[rgba(8,9,14,0.85)] to-transparent overflow-hidden">
+    <section id="about" className="relative w-full py-24 sm:py-32 px-4 sm:px-8 md:px-12 lg:px-16 bg-gradient-to-b from-transparent via-[rgba(8,9,14,0.88)] to-transparent overflow-hidden">
+      {/* Top and bottom dark-to-light gradient merges */}
+      <div className="absolute top-0 left-0 right-0 h-44 bg-gradient-to-b from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
+
       {/* Ambient Soundstage Spotlight Vignettes */}
       <div className="absolute top-1/3 left-0 w-[600px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08)_0%,transparent_70%)] pointer-events-none" />
       <div className="absolute bottom-10 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.04)_0%,transparent_70%)] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <CinematicReveal effect="rack-focus" className="relative mb-16 sm:mb-20 text-center">
           <div className="inline-flex items-center gap-2 text-[#d4af37] text-xs font-mono tracking-[0.3em] uppercase mb-4 px-3.5 py-1 rounded-full bg-[rgba(212,175,55,0.08)] border border-[rgba(212,175,55,0.25)] backdrop-blur-md">

@@ -158,12 +158,75 @@ export default function StudioScene({
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // 4. Studio Soundstage Floor & Acoustics
-    const floorGeo = new THREE.PlaneGeometry(32, 32);
+    // Helper to generate soft radial alpha texture for floor gradient merge
+    const createFloorRadialAlpha = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024;
+      canvas.height = 1024;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const grad = ctx.createRadialGradient(512, 512, 60, 512, 512, 510);
+        grad.addColorStop(0, "rgba(255, 255, 255, 1.0)");
+        grad.addColorStop(0.25, "rgba(255, 255, 255, 0.9)");
+        grad.addColorStop(0.5, "rgba(255, 255, 255, 0.55)");
+        grad.addColorStop(0.72, "rgba(255, 255, 255, 0.2)");
+        grad.addColorStop(0.9, "rgba(255, 255, 255, 0.04)");
+        grad.addColorStop(1.0, "rgba(0, 0, 0, 0.0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1024, 1024);
+      }
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      return tex;
+    };
+
+    // Helper to generate feathered alpha texture for cinema screen wall
+    const createFeatheredWallAlpha = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const grad = ctx.createRadialGradient(256, 256, 80, 256, 256, 254);
+        grad.addColorStop(0, "rgba(255, 255, 255, 1.0)");
+        grad.addColorStop(0.65, "rgba(255, 255, 255, 0.8)");
+        grad.addColorStop(0.85, "rgba(255, 255, 255, 0.2)");
+        grad.addColorStop(1.0, "rgba(0, 0, 0, 0.0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 512);
+      }
+      return new THREE.CanvasTexture(canvas);
+    };
+
+    // Helper for cinema projector screen dark-to-light glow texture
+    const createProjectorScreenTex = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const grad = ctx.createRadialGradient(512, 256, 30, 512, 256, 480);
+        grad.addColorStop(0, "rgba(65, 90, 145, 1.0)");
+        grad.addColorStop(0.35, "rgba(42, 56, 95, 0.9)");
+        grad.addColorStop(0.7, "rgba(20, 26, 48, 0.65)");
+        grad.addColorStop(1.0, "rgba(6, 8, 14, 0.3)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1024, 512);
+      }
+      return new THREE.CanvasTexture(canvas);
+    };
+
+    // 4. Studio Soundstage Floor & Acoustics (with smooth radial dark-to-light gradient merge)
+    const floorGeo = new THREE.PlaneGeometry(54, 54);
+    const floorAlpha = createFloorRadialAlpha();
     const floorMat = new THREE.MeshStandardMaterial({
-      color: 0x10101a,
-      roughness: 0.35,
-      metalness: 0.6,
+      color: 0x0d0f18,
+      roughness: 0.45,
+      metalness: 0.35,
+      alphaMap: floorAlpha,
+      transparent: true,
+      depthWrite: false,
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
@@ -182,11 +245,15 @@ export default function StudioScene({
     mark2.position.set(2.5, -1.19, 0.2);
     scene.add(mark2);
 
-    // Back Cinema Projection Wall
-    const screenWallGeo = new THREE.PlaneGeometry(14, 6);
+    // Back Cinema Projection Wall (feathered edges into darkness)
+    const screenWallGeo = new THREE.PlaneGeometry(16, 7);
+    const screenWallAlpha = createFeatheredWallAlpha();
     const screenWallMat = new THREE.MeshStandardMaterial({
-      color: 0x141418,
-      roughness: 0.8,
+      color: 0x0e0f16,
+      roughness: 0.85,
+      alphaMap: screenWallAlpha,
+      transparent: true,
+      depthWrite: false,
     });
     const screenWall = new THREE.Mesh(screenWallGeo, screenWallMat);
     screenWall.position.set(0, 1.2, -7.8);
@@ -199,10 +266,12 @@ export default function StudioScene({
     screenBorder.position.set(0, 1.2, -7.7);
     scene.add(screenBorder);
 
-    // Active Screen Glow Surface
+    // Active Screen Glow Surface (Cinema Projector radial gradient)
     const screenCanvasGeo = new THREE.PlaneGeometry(9.2, 3.85);
     const screenCanvasMat = new THREE.MeshBasicMaterial({
-      color: 0x222838,
+      map: createProjectorScreenTex(),
+      transparent: true,
+      opacity: 0.92,
     });
     const screenCanvas = new THREE.Mesh(screenCanvasGeo, screenCanvasMat);
     screenCanvas.position.set(0, 1.2, -7.64);
@@ -231,11 +300,11 @@ export default function StudioScene({
 
     // 7. Lighting System — Enhanced for clarity and premium look
     // Ambient soundstage fill (brighter for object visibility)
-    const ambientLight = new THREE.AmbientLight(0x1a1c2a, 1.6);
+    const ambientLight = new THREE.AmbientLight(0x161824, 1.4);
     scene.add(ambientLight);
 
-    // Hemisphere light for natural fill (sky + ground bounce)
-    const hemiLight = new THREE.HemisphereLight(0x2233aa, 0x0a0808, 0.9);
+    // Hemisphere light for natural fill (soft ambient bounce with dark shadows)
+    const hemiLight = new THREE.HemisphereLight(0x152238, 0x08080c, 0.65);
     scene.add(hemiLight);
 
     // Key Studio Light (Fresnel Spot) — stronger
@@ -249,8 +318,8 @@ export default function StudioScene({
     scene.add(keyLight.target);
     keyLightRef.current = keyLight;
 
-    // Studio Rim / Hair Light (Cool Cyan backlight) — stronger edge definition
-    const rimLight = new THREE.DirectionalLight(0x5588cc, 2.2);
+    // Studio Rim / Hair Light (Cool Cyan backlight) — smooth edge definition
+    const rimLight = new THREE.DirectionalLight(0x4477aa, 1.8);
     rimLight.position.set(3, 4.5, -4);
     scene.add(rimLight);
 

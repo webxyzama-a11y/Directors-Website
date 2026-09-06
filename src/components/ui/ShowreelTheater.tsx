@@ -17,7 +17,11 @@ export default function ShowreelTheater() {
   };
 
   return (
-    <section id="showreel" className="relative w-full py-28 px-4 md:px-12 bg-[rgba(4,4,6,0.9)] overflow-hidden">
+    <section id="showreel" className="relative w-full py-28 sm:py-36 px-4 md:px-12 bg-gradient-to-b from-transparent via-[rgba(4,4,6,0.95)] to-transparent overflow-hidden">
+      {/* Top and bottom cinematic dark-to-light gradient merges */}
+      <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-[#060608] via-[#060608]/80 to-transparent pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#060608] via-[#060608]/80 to-transparent pointer-events-none z-0" />
+
       {/* Volumetric Projector Glow in Background */}
       <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[rgba(232,240,255,0.08)] via-transparent to-transparent pointer-events-none" />
 

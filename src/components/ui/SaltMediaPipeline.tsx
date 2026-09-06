@@ -16,7 +16,11 @@ export default function SaltMediaPipeline() {
   };
 
   return (
-    <section id="salt-media" className="relative w-full py-28 px-4 md:px-12 bg-gradient-to-b from-transparent via-[rgba(7,8,12,0.85)] to-transparent overflow-hidden">
+    <section id="salt-media" className="relative w-full py-28 sm:py-36 px-4 md:px-12 bg-gradient-to-b from-transparent via-[rgba(7,8,12,0.88)] to-transparent overflow-hidden">
+      {/* Top and bottom dark-to-light gradient merges */}
+      <div className="absolute top-0 left-0 right-0 h-44 bg-gradient-to-b from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
+
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <CinematicReveal effect="rack-focus" className="text-center max-w-4xl mx-auto mb-16">

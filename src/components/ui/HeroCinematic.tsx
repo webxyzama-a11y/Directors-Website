@@ -359,14 +359,16 @@ export default function HeroCinematic({
       {/* ─── Animated Background Canvas (particles, rays, flares) ─── */}
       <HeroParticleCanvas />
 
-      {/* ─── Cinematic Vignette Gradients ─── */}
+      {/* ─── Cinematic Vignette Gradients (Dark-to-light gradient merge) ─── */}
       <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
-        {/* Bottom fade for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(6,6,8,0.85)] via-[rgba(6,6,8,0.25)] to-transparent" />
+        {/* Continuous bottom fade */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060608] via-[rgba(6,6,8,0.4)] to-transparent" />
+        {/* Deep bottom gradient merge toward next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#060608] via-[#060608]/75 to-transparent" />
         {/* Side vignette */}
         <div className="absolute inset-0 bg-gradient-to-r from-[rgba(6,6,8,0.5)] via-transparent to-[rgba(6,6,8,0.3)]" />
         {/* Top subtle darkening */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(6,6,8,0.45)] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(6,6,8,0.5)] via-transparent to-transparent" />
       </div>
 
       {/* ─── Animated golden scanline (moves slowly down) ─── */}

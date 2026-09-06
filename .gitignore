@@ -15,6 +15,8 @@ dist-ssr
 out/
 build/
 *.tsbuildinfo
+AGENTS.md
+CLAUDE.md
 
 # Environment variables
 .env*.local

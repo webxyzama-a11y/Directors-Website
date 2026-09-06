@@ -11,8 +11,11 @@ export default function RollingCredits() {
   return (
     <section
       id="credits"
-      className="relative w-full py-24 sm:py-32 px-4 sm:px-8 md:px-12 lg:px-16 bg-[rgba(5,5,8,0.95)] border-t border-[rgba(255,255,255,0.06)] overflow-hidden"
+      className="relative w-full py-24 sm:py-32 px-4 sm:px-8 md:px-12 lg:px-16 bg-gradient-to-b from-transparent via-[rgba(5,5,8,0.96)] to-transparent overflow-hidden"
     >
+      {/* Top and bottom dark-to-light gradient merges */}
+      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
       {/* Ambient Soundstage Spotlight Vignette */}
       <div className="absolute top-1/4 right-0 w-[650px] h-[650px] bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.1)_0%,transparent_70%)] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.05)_0%,transparent_70%)] pointer-events-none" />

@@ -234,7 +234,11 @@ export default function FilmStripBrowser({ onSelectProject }: FilmStripBrowserPr
   };
 
   return (
-    <section id="work" className="relative w-full py-24 px-4 md:px-12 bg-gradient-to-b from-transparent via-[rgba(6,6,8,0.78)] to-transparent">
+    <section id="work" className="relative w-full py-24 sm:py-32 px-4 md:px-12 bg-gradient-to-b from-transparent via-[rgba(6,6,8,0.85)] to-transparent overflow-hidden">
+      {/* Top and bottom dark-to-light gradient merges */}
+      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
+
       {/* Chapter Title & Positioning */}
       <div className="max-w-7xl mx-auto mb-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[rgba(255,255,255,0.08)]">

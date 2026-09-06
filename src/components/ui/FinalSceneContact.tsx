@@ -20,7 +20,10 @@ export default function FinalSceneContact() {
   };
 
   return (
-    <section id="contact" className="relative w-full min-h-screen py-32 px-4 md:px-12 bg-[rgba(4,4,6,0.94)] flex flex-col justify-center items-center text-center overflow-hidden">
+    <section id="contact" className="relative w-full min-h-screen py-32 px-4 md:px-12 bg-gradient-to-b from-transparent via-[rgba(4,4,6,0.96)] to-[#040406] flex flex-col justify-center items-center text-center overflow-hidden">
+      {/* Top dark-to-light gradient merge */}
+      <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-[#060608] via-[#060608]/80 to-transparent pointer-events-none z-0" />
+
       {/* Single Pinpoint Spotlight Beam on Darkness */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08)_0%,_transparent_70%)] pointer-events-none" />
 

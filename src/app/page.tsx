@@ -103,7 +103,7 @@ export default function Home() {
       <GrandRedCurtain key={curtainKey} />
 
       {/* 3D WebGL Studio Soundstage Scene (Fixed Background Canvas) */}
-      <div className="fixed inset-0 w-full h-full pointer-events-none z-0">
+      <div className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
         <StudioScene
           activeTarget={activeStudioTarget}
           isRecActive={isRecActive}
@@ -111,6 +111,17 @@ export default function Home() {
           isAudioActive={!soundEngine.isMuted}
           onObjectClick={handleObjectClick}
         />
+        {/* Cinematic Vignette & Dark-to-Light Atmospheric Gradients */}
+        <div className="absolute inset-0 pointer-events-none z-[1]">
+          {/* Top dark-to-light fade for HUD & navbar */}
+          <div className="absolute top-0 left-0 right-0 h-44 bg-gradient-to-b from-[#060608] via-[#060608]/75 to-transparent" />
+          {/* Bottom dark-to-light fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-[#060608] via-[#060608]/75 to-transparent" />
+          {/* Side soft vignettes */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060608]/45 via-transparent to-[#060608]/45" />
+          {/* Perimeter radial dark vignette */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_45%,rgba(6,6,8,0.65)_100%)]" />
+        </div>
       </div>
 
       {/* Cinematic HUD Header */}
@@ -138,43 +149,67 @@ export default function Home() {
         />
       </div>
 
-      {/* Chapter 02: 35mm Film Strip & Selected Works (Interaction 06 & 07, Feature 5 Light Table) */}
+      {/* Chapter 02: 35mm Film Strip & Selected Works */}
       <div className="relative z-10">
+        <div className="w-full flex justify-center pointer-events-none">
+          <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/25 to-transparent" />
+        </div>
         <FilmStripBrowser onSelectProject={(p) => setSelectedProject(p)} />
       </div>
 
-      {/* Chapter 03: Career Timeline NLE (Interaction 05) */}
+      {/* Chapter 03: Career Timeline NLE */}
       <div className="relative z-10">
+        <div className="w-full flex justify-center pointer-events-none">
+          <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/20 to-transparent" />
+        </div>
         <CareerTimeline onStageSelect={handleTimelineStageSelect} />
       </div>
 
       {/* Chapter 05: The Screening Room / Official Showreel */}
       <div className="relative z-10">
+        <div className="w-full flex justify-center pointer-events-none">
+          <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/25 to-transparent" />
+        </div>
         <ShowreelTheater />
       </div>
 
       {/* Chapter 06: The Director's Chair Biography */}
       <div className="relative z-10">
+        <div className="w-full flex justify-center pointer-events-none">
+          <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/20 to-transparent" />
+        </div>
         <AboutDirector />
       </div>
 
       {/* Chapter 07: Industry Dialogue Testimonials */}
       <div className="relative z-10">
+        <div className="w-full flex justify-center pointer-events-none">
+          <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/20 to-transparent" />
+        </div>
         <Testimonials />
       </div>
 
       {/* Chapter 08: Salt Media Scale & Production Pipeline */}
       <div className="relative z-10">
+        <div className="w-full flex justify-center pointer-events-none">
+          <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/25 to-transparent" />
+        </div>
         <SaltMediaPipeline />
       </div>
 
       {/* Chapter 09: Collaborator & Broadcaster Credits */}
       <div className="relative z-10">
+        <div className="w-full flex justify-center pointer-events-none">
+          <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/20 to-transparent" />
+        </div>
         <RollingCredits />
       </div>
 
       {/* Chapter 10: Final Scene & CUT Fade to Black */}
       <div className="relative z-10">
+        <div className="w-full flex justify-center pointer-events-none">
+          <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/30 to-transparent" />
+        </div>
         <FinalSceneContact />
       </div>
 
