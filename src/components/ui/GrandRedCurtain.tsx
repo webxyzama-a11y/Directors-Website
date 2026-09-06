@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Clapperboard, Volume2, Film } from "lucide-react";
+import { Film } from "lucide-react";
 import { soundEngine } from "@/audio/soundEngine";
 
 interface GrandRedCurtainProps {
@@ -17,7 +17,6 @@ export default function GrandRedCurtain({
   const [isParted, setIsParted] = useState(false);
   // isHidden removes the overlay from DOM / pointer events once fully parted
   const [isHidden, setIsHidden] = useState(false);
-  const [countdown, setCountdown] = useState(3);
 
   // Trigger parting the curtains
   const handleOpenCurtains = () => {
@@ -44,7 +43,7 @@ export default function GrandRedCurtain({
     }, 2400);
   };
 
-  // Auto-countdown timer on load/reload
+  // Auto-open curtains on load/reload
   useEffect(() => {
     if (forceOpen) {
       setIsParted(true);
@@ -52,18 +51,11 @@ export default function GrandRedCurtain({
       return;
     }
 
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleOpenCurtains();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    const timer = setTimeout(() => {
+      handleOpenCurtains();
+    }, 1500);
 
-    return () => clearInterval(timer);
+    return () => clearTimeout(timer);
   }, [forceOpen]);
 
   if (isHidden) return null;
@@ -265,25 +257,10 @@ export default function GrandRedCurtain({
             &ldquo;13+ Years • 80+ Shows • One Obsession: Storytelling. Enter the 3D Soundstage.&rdquo;
           </p>
 
-          {/* Interactive "Open Curtains" Button */}
-          <div className="flex flex-col items-center gap-3">
-            <button
-              onClick={handleOpenCurtains}
-              className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#f7e089] to-[#d4af37] text-black font-mono text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider shadow-[0_0_35px_rgba(212,175,55,0.5)] hover:shadow-[0_0_50px_rgba(212,175,55,0.8)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer overflow-hidden"
-            >
-              {/* Shimmer light sweep on button */}
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
-              <Clapperboard className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-black group-hover:rotate-12 transition-transform duration-300 shrink-0" />
-              <span>OPEN CURTAINS</span>
-              <span className="hidden xs:inline">• ENTER THEATER</span>
-              <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-black shrink-0" />
-            </button>
-
-            {/* Auto countdown indicator */}
-            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono text-white/50 tracking-wider">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37] animate-ping" />
-              <span>Curtains opening automatically in {countdown}s...</span>
-            </div>
+          {/* Automatic Opening Indicator */}
+          <div className="flex items-center justify-center gap-2 text-[10px] sm:text-xs font-mono text-[#d4af37]/80 tracking-[0.25em] uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37] animate-ping" />
+            <span>Curtains opening automatically • Click anywhere to enter</span>
           </div>
         </div>
       </div>
