@@ -17,7 +17,7 @@ import RollingCredits from "@/components/ui/RollingCredits";
 import FinalSceneContact from "@/components/ui/FinalSceneContact";
 import ClapperboardModal from "@/components/ui/ClapperboardModal";
 import PropInspectModal, { InspectableProp } from "@/components/ui/PropInspectModal";
-import GrandRedCurtain from "@/components/ui/GrandRedCurtain";
+import ClapperboardIntro from "@/components/ui/ClapperboardIntro";
 import TrackingShotBadge from "@/components/ui/TrackingShotBadge";
 import { StudioFocusTarget } from "@/components/canvas/StudioScene";
 
@@ -99,8 +99,8 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-[#060608] text-white selection:bg-[#d4af37] selection:text-black">
-      {/* Grand Cinema Red Curtains: Opens on first load/reload and reveals the experience */}
-      <GrandRedCurtain key={curtainKey} />
+      {/* Clapperboard intro: snaps on load/click and reveals the experience */}
+      <ClapperboardIntro key={curtainKey} />
 
       {/* 3D WebGL Studio Soundstage Scene (Fixed Background Canvas) */}
       <div className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
@@ -156,6 +156,7 @@ export default function Home() {
         </div>
         <FilmStripBrowser onSelectProject={(p) => setSelectedProject(p)} />
       </div>
+
 
       {/* Chapter 03: Career Timeline NLE */}
       <div className="relative z-10">
