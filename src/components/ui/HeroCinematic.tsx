@@ -354,7 +354,7 @@ export default function HeroCinematic({
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen w-full flex flex-col justify-end pt-20 sm:pt-24 pb-14 md:pb-24 px-4 sm:px-8 md:px-16 overflow-hidden pointer-events-none"
+      className="relative min-h-screen w-full flex flex-col justify-center sm:justify-end pt-16 sm:pt-24 pb-20 sm:pb-24 px-4 sm:px-8 md:px-16 overflow-hidden pointer-events-none"
     >
       {/* ─── Animated Background Canvas (particles, rays, flares) ─── */}
       <HeroParticleCanvas />
@@ -384,12 +384,12 @@ export default function HeroCinematic({
 
       {/* ─── Content ─── */}
       <div
-        className="relative max-w-5xl pointer-events-auto"
+        className="relative max-w-5xl pointer-events-auto -mt-6 sm:mt-0"
         style={{ zIndex: 10 }}
       >
         {/* Film Badge */}
         <div
-          className={`inline-flex items-center gap-3 px-4 py-1.5 rounded-full mb-5 transition-all duration-1000 ${
+          className={`inline-flex items-center gap-3 px-3.5 sm:px-4 py-1.5 rounded-full mb-3.5 sm:mb-5 transition-all duration-1000 ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-6"
@@ -410,7 +410,7 @@ export default function HeroCinematic({
 
         {/* Director Name - staggered letter reveal */}
         <h1
-          className={`text-[32px] xs:text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tight text-white mb-4 leading-none uppercase select-none font-serif transition-all duration-1200 ${
+          className={`text-[32px] xs:text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tight text-white mb-3 sm:mb-4 leading-none uppercase select-none font-serif transition-all duration-1200 ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-10"
@@ -441,7 +441,7 @@ export default function HeroCinematic({
 
         {/* Roles Subhead with animated gold line */}
         <div
-          className={`flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm md:text-base font-mono tracking-[0.25em] uppercase text-[#d4af37] mb-6 transition-all duration-1000 ${
+          className={`flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm md:text-base font-mono tracking-[0.25em] uppercase text-[#d4af37] mb-4 sm:mb-6 transition-all duration-1000 ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-6"
@@ -463,7 +463,7 @@ export default function HeroCinematic({
 
         {/* Primary Positioning Quote */}
         <blockquote
-          className={`text-lg sm:text-2xl md:text-3xl font-light text-[rgba(255,255,255,0.9)] max-w-3xl leading-snug mb-8 pl-5 italic transition-all duration-1000 ${
+          className={`text-base sm:text-2xl md:text-3xl font-light text-[rgba(255,255,255,0.9)] max-w-3xl leading-snug mb-5 sm:mb-8 pl-4 sm:pl-5 italic transition-all duration-1000 ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-6"
@@ -479,7 +479,7 @@ export default function HeroCinematic({
 
         {/* Supporting Metrics Badges - Animated Counters */}
         <div
-          className={`grid grid-cols-3 max-w-md gap-2 sm:gap-4 mb-8 sm:mb-10 pt-5 sm:pt-6 font-mono transition-all duration-1000 ${
+          className={`grid grid-cols-3 max-w-md gap-2 sm:gap-4 mb-6 sm:mb-10 pt-4 sm:pt-6 font-mono transition-all duration-1000 ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-6"

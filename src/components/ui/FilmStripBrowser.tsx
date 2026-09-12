@@ -274,10 +274,10 @@ export default function FilmStripBrowser({ onSelectProject }: FilmStripBrowserPr
   return (
     <section
       id="work"
-      className="relative w-full py-20 sm:py-28 px-4 md:px-12 bg-gradient-to-b from-transparent via-[rgba(6,6,8,0.85)] to-transparent overflow-hidden"
+      className="relative w-full pt-4 pb-20 sm:pt-28 sm:pb-28 px-4 md:px-12 bg-gradient-to-b from-transparent via-[rgba(6,6,8,0.85)] to-transparent overflow-hidden"
     >
       {/* Top and bottom cinematic dark merges */}
-      <div className="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
+      <div className="absolute top-0 left-0 right-0 h-24 sm:h-36 bg-gradient-to-b from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
       <div className="absolute bottom-0 left-0 right-0 h-36 bg-gradient-to-t from-[#060608] via-[#060608]/75 to-transparent pointer-events-none z-0" />
 
       {/* Chapter Title & Global Controls */}

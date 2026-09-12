@@ -25,14 +25,14 @@ html {
   background-color: var(--bg-obsidian);
   color: #f5f5f7;
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   background-color: var(--bg-obsidian);
   min-height: 100vh;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Hide scrollbars for slick film strips */

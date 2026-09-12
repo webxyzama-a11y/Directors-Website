@@ -6,6 +6,7 @@ import { Project, CareerTimelineStage } from "@/types";
 import { soundEngine } from "@/audio/soundEngine";
 import CinematicHeader from "@/components/ui/CinematicHeader";
 import HeroCinematic from "@/components/ui/HeroCinematic";
+import ScrollVideoHero from "@/components/ui/ScrollVideoHero";
 import FilmStripBrowser from "@/components/ui/FilmStripBrowser";
 import BreakTheFrameModal from "@/components/ui/BreakTheFrameModal";
 import CareerTimeline from "@/components/ui/CareerTimeline";
@@ -19,15 +20,8 @@ import ClapperboardModal from "@/components/ui/ClapperboardModal";
 import PropInspectModal, { InspectableProp } from "@/components/ui/PropInspectModal";
 import ClapperboardIntro from "@/components/ui/ClapperboardIntro";
 import TrackingShotBadge from "@/components/ui/TrackingShotBadge";
-import { StudioFocusTarget } from "@/components/canvas/StudioScene";
-
-// Dynamic import with SSR disabled for WebGL canvas
-const StudioScene = dynamic(() => import("@/components/canvas/StudioScene"), {
-  ssr: false,
-});
 
 export default function Home() {
-  const [activeStudioTarget, setActiveStudioTarget] = useState<StudioFocusTarget>("studio");
   const [isRecActive, setIsRecActive] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isClapperOpen, setIsClapperOpen] = useState(false);
@@ -38,11 +32,6 @@ export default function Home() {
   const [isInspectOpen, setIsInspectOpen] = useState(false);
   const [selectedInspectProp, setSelectedInspectProp] = useState<InspectableProp>("camera");
 
-  const [timelineAtmosphere, setTimelineAtmosphere] = useState({
-    lightingColor: "#ff9944",
-    accentColor: "#f39c12",
-  });
-
   const handleToggleRec = () => {
     soundEngine.playRecBeep();
     setIsRecActive((prev) => !prev);
@@ -51,7 +40,6 @@ export default function Home() {
   const handleNavigate = (sectionId: string) => {
     setCurrentSection(sectionId);
     if (sectionId === "prologue") {
-      setActiveStudioTarget("studio");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       const el = document.getElementById(sectionId);
@@ -62,11 +50,7 @@ export default function Home() {
   };
 
   const handleTimelineStageSelect = (stage: CareerTimelineStage) => {
-    setActiveStudioTarget("timeline");
-    setTimelineAtmosphere({
-      lightingColor: stage.lightingColor,
-      accentColor: stage.accentColor,
-    });
+    // Stage selected
   };
 
   // Handle interactive 3D prop clicks — navigate to relevant section
@@ -74,18 +58,15 @@ export default function Home() {
     soundEngine.playWhoosh();
     switch (objectName) {
       case "camera":
-        setActiveStudioTarget("camera");
         handleNavigate("work");
         break;
       case "chair":
-        setActiveStudioTarget("chair");
         handleNavigate("about");
         break;
       case "clapperboard":
         setIsClapperOpen(true);
         break;
       case "filmcans":
-        setActiveStudioTarget("studio");
         handleNavigate("work");
         break;
     }
@@ -102,28 +83,6 @@ export default function Home() {
       {/* Clapperboard intro: snaps on load/click and reveals the experience */}
       <ClapperboardIntro key={curtainKey} />
 
-      {/* 3D WebGL Studio Soundstage Scene (Fixed Background Canvas) */}
-      <div className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
-        <StudioScene
-          activeTarget={activeStudioTarget}
-          isRecActive={isRecActive}
-          timelineAtmosphere={timelineAtmosphere}
-          isAudioActive={!soundEngine.isMuted}
-          onObjectClick={handleObjectClick}
-        />
-        {/* Cinematic Vignette & Dark-to-Light Atmospheric Gradients */}
-        <div className="absolute inset-0 pointer-events-none z-[1]">
-          {/* Top dark-to-light fade for HUD & navbar */}
-          <div className="absolute top-0 left-0 right-0 h-44 bg-gradient-to-b from-[#060608] via-[#060608]/75 to-transparent" />
-          {/* Bottom dark-to-light fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-[#060608] via-[#060608]/75 to-transparent" />
-          {/* Side soft vignettes */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#060608]/45 via-transparent to-[#060608]/45" />
-          {/* Perimeter radial dark vignette */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_45%,rgba(6,6,8,0.65)_100%)]" />
-        </div>
-      </div>
-
       {/* Cinematic HUD Header */}
       <CinematicHeader
         onOpenClapper={() => setIsClapperOpen(true)}
@@ -137,20 +96,18 @@ export default function Home() {
 
       {/* Chapter 01: Prologue / Hero Reveal */}
       <div id="prologue">
-        <HeroCinematic
+        <ScrollVideoHero
           onEnterWorld={() => {
-            setActiveStudioTarget("monitor");
             handleNavigate("work");
           }}
           onPlayShowreel={() => {
-            setActiveStudioTarget("cinema");
             handleNavigate("showreel");
           }}
         />
       </div>
 
       {/* Chapter 02: 35mm Film Strip & Selected Works */}
-      <div className="relative z-10">
+      <div className="relative z-10 -mt-72 sm:mt-0">
         <div className="w-full flex justify-center pointer-events-none">
           <div className="w-full max-w-6xl h-px bg-gradient-to-r from-transparent via-[#d4af37]/25 to-transparent" />
         </div>
