@@ -23,16 +23,6 @@ export default function GrandRedCurtain({
     if (isParted) return;
     setIsParted(true);
 
-    // Unmute audio and trigger grand audience applause + velvet opening
-    soundEngine.unmute();
-    soundEngine.playAudienceApplause();
-    soundEngine.playCurtainOpening();
-
-    // Fade in peaceful ambient soundscape throughout the video and experience
-    setTimeout(() => {
-      soundEngine.startPeacefulAmbient();
-    }, 1200);
-
     if (onCurtainOpen) {
       onCurtainOpen();
     }

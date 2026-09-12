@@ -41,8 +41,6 @@ export default function ClapperboardIntro({
     if (hasSnapped.current) return;
     hasSnapped.current = true;
 
-    soundEngine.unmute();
-    soundEngine.playClapperSnap();
     setPhase("snapping");
 
     const start = performance.now();
@@ -59,7 +57,6 @@ export default function ClapperboardIntro({
           setPhase("flash");
           setTimeout(() => {
             setPhase("exiting");
-            soundEngine.startPeacefulAmbient();
             if (onComplete) onComplete();
             setTimeout(() => setPhase("done"), 750);
           }, 140);

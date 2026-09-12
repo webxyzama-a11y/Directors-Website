@@ -59,7 +59,6 @@ class SoundEngine {
       this.stopPeacefulAmbient();
     } else {
       this.playWhoosh();
-      this.startPeacefulAmbient();
     }
     this.notify();
     return !this.isMuted;
@@ -71,8 +70,6 @@ class SoundEngine {
     if (this.isMuted) {
       this.stopProjectorHum();
       this.stopPeacefulAmbient();
-    } else {
-      this.startPeacefulAmbient();
     }
     this.notify();
   }
@@ -497,95 +494,8 @@ class SoundEngine {
   public startPeacefulAmbient(): void {
     if (this.isMuted) return;
     this.init();
-    if (!this.ctx) return;
-    if (this.isPeacefulRunning) return;
-
-    try {
-      const t = this.ctx.currentTime;
-      this.isPeacefulRunning = true;
-
-      // Master gain for the peaceful soundscape (gentle, calming background level)
-      this.peacefulGain = this.ctx.createGain();
-      this.peacefulGain.gain.setValueAtTime(0.0001, t);
-      this.peacefulGain.gain.linearRampToValueAtTime(0.09, t + 2.5);
-
-      // Lowpass filter for warm cinematic analog feel
-      this.peacefulFilter = this.ctx.createBiquadFilter();
-      this.peacefulFilter.type = "lowpass";
-      this.peacefulFilter.frequency.setValueAtTime(540, t);
-      this.peacefulFilter.Q.setValueAtTime(1.2, t);
-
-      // Gentle LFO modulating the filter for slow, peaceful organic "breathing"
-      this.peacefulLfo = this.ctx.createOscillator();
-      this.peacefulLfo.type = "sine";
-      this.peacefulLfo.frequency.setValueAtTime(0.06, t); // 16-second calm breath cycle
-
-      this.peacefulLfoGain = this.ctx.createGain();
-      this.peacefulLfoGain.gain.setValueAtTime(180, t);
-
-      this.peacefulLfo.connect(this.peacefulLfoGain);
-      this.peacefulLfoGain.connect(this.peacefulFilter.frequency);
-      this.peacefulLfo.start(t);
-
-      // Warm cinematic harmonic pad chords (D2, A2, D3, F#3, A3, E4)
-      const chordNotes = [
-        { freq: 73.42, type: "sine" as OscillatorType, detune: 0, gain: 0.28 },     // D2 (sub warmth)
-        { freq: 110.0, type: "sine" as OscillatorType, detune: -3, gain: 0.22 },    // A2 (peaceful fifth)
-        { freq: 146.83, type: "sine" as OscillatorType, detune: 2, gain: 0.18 },    // D3 (root)
-        { freq: 185.0, type: "sine" as OscillatorType, detune: -2, gain: 0.16 },    // F#3 (warm major third)
-        { freq: 220.0, type: "triangle" as OscillatorType, detune: 3, gain: 0.12 }, // A3 (upper fifth)
-        { freq: 329.63, type: "sine" as OscillatorType, detune: -1, gain: 0.08 },   // E4 (peaceful ninth)
-      ];
-
-      this.peacefulOscs = [];
-      chordNotes.forEach((note) => {
-        if (!this.ctx || !this.peacefulFilter) return;
-        const osc = this.ctx.createOscillator();
-        const oscGain = this.ctx.createGain();
-
-        osc.type = note.type;
-        osc.frequency.setValueAtTime(note.freq, t);
-        osc.detune.setValueAtTime(note.detune, t);
-
-        oscGain.gain.setValueAtTime(note.gain, t);
-
-        osc.connect(oscGain);
-        oscGain.connect(this.peacefulFilter);
-        osc.start(t);
-        this.peacefulOscs.push(osc);
-      });
-
-      this.peacefulFilter.connect(this.peacefulGain);
-      this.peacefulGain.connect(this.ctx.destination);
-
-      // Periodic subtle celestial chime harmonics (pentatonic D5, E5, F#5, A5, B5)
-      const chimeFreqs = [587.33, 659.25, 739.99, 880.0, 987.77];
-      this.chimeInterval = setInterval(() => {
-        if (this.isMuted || !this.isPeacefulRunning || !this.ctx) return;
-        try {
-          const chimeTime = this.ctx.currentTime;
-          const chimeOsc = this.ctx.createOscillator();
-          const chimeGain = this.ctx.createGain();
-
-          const randomFreq = chimeFreqs[Math.floor(Math.random() * chimeFreqs.length)];
-          chimeOsc.type = "sine";
-          chimeOsc.frequency.setValueAtTime(randomFreq, chimeTime);
-
-          chimeGain.gain.setValueAtTime(0.0001, chimeTime);
-          chimeGain.gain.linearRampToValueAtTime(0.035, chimeTime + 0.08);
-          chimeGain.gain.exponentialRampToValueAtTime(0.0001, chimeTime + 3.4);
-
-          chimeOsc.connect(chimeGain);
-          chimeGain.connect(this.ctx.destination);
-
-          chimeOsc.start(chimeTime);
-          chimeOsc.stop(chimeTime + 3.5);
-        } catch (e) {}
-      }, 4500);
-
-    } catch (err) {
-      console.warn("Could not start peaceful ambient soundscape", err);
-    }
+    // Music removed per request
+    return;
   }
 
   public stopPeacefulAmbient(): void {
@@ -593,36 +503,24 @@ class SoundEngine {
       clearInterval(this.chimeInterval);
       this.chimeInterval = null;
     }
-
-    if (this.peacefulGain && this.ctx) {
+    this.peacefulOscs.forEach((osc) => {
       try {
-        const t = this.ctx.currentTime;
-        this.peacefulGain.gain.linearRampToValueAtTime(0.0001, t + 0.8);
+        osc.stop();
+        osc.disconnect();
       } catch (e) {}
+    });
+    this.peacefulOscs = [];
+    if (this.peacefulLfo) {
+      try {
+        this.peacefulLfo.stop();
+        this.peacefulLfo.disconnect();
+      } catch (e) {}
+      this.peacefulLfo = null;
     }
-
-    setTimeout(() => {
-      this.peacefulOscs.forEach((osc) => {
-        try {
-          osc.stop();
-          osc.disconnect();
-        } catch (e) {}
-      });
-      this.peacefulOscs = [];
-
-      if (this.peacefulLfo) {
-        try {
-          this.peacefulLfo.stop();
-          this.peacefulLfo.disconnect();
-        } catch (e) {}
-        this.peacefulLfo = null;
-      }
-
-      this.peacefulGain = null;
-      this.peacefulFilter = null;
-      this.peacefulLfoGain = null;
-      this.isPeacefulRunning = false;
-    }, 900);
+    this.peacefulGain = null;
+    this.peacefulFilter = null;
+    this.peacefulLfoGain = null;
+    this.isPeacefulRunning = false;
   }
 }
 
