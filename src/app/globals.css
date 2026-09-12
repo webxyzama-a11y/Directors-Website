@@ -45,22 +45,6 @@ body {
 }
 
 
-/* Lightweight Film Grain Texture Overlay */
-.film-grain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 999;
-  opacity: 0.025;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
-  background-size: 4px 4px;
-  transform: translateZ(0);
-  will-change: transform;
-  backface-visibility: hidden;
-}
 
 /* Anamorphic Blue Streak / Flare Line */
 .anamorphic-flare {

@@ -14,6 +14,14 @@ export default function TrackingShotBadge() {
 
     let ticking = false;
     let lastPct = -1;
+    let cachedTotalHeight = 1;
+
+    const updateTotalHeight = () => {
+      cachedTotalHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
+
+    updateTotalHeight();
+    window.addEventListener("resize", updateTotalHeight, { passive: true });
 
     const getTrackingShotLabel = (p: number) => {
       if (p < 0.18) return "SHOT 01 • ESTABLISHING WIDE SOUNDSTAGE";
@@ -27,16 +35,13 @@ export default function TrackingShotBadge() {
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-          if (totalHeight > 0) {
-            const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
-            const progress = Math.min(Math.max(scrollY / totalHeight, 0), 1);
-            const intPct = Math.round(progress * 100);
-            if (intPct !== lastPct) {
-              lastPct = intPct;
-              labelEl.textContent = getTrackingShotLabel(progress);
-              pctEl.textContent = `[${intPct}%]`;
-            }
+          const scrollY = window.scrollY || window.pageYOffset || 0;
+          const progress = Math.min(Math.max(scrollY / cachedTotalHeight, 0), 1);
+          const intPct = Math.round(progress * 100);
+          if (intPct !== lastPct) {
+            lastPct = intPct;
+            labelEl.textContent = getTrackingShotLabel(progress);
+            pctEl.textContent = `[${intPct}%]`;
           }
           ticking = false;
         });
@@ -46,7 +51,10 @@ export default function TrackingShotBadge() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", updateTotalHeight);
+    };
   }, []);
 
   return (

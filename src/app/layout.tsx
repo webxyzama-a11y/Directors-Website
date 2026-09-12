@@ -34,9 +34,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="bg-[#060608] text-white selection:bg-[#d4af37] selection:text-black">
-        {/* Film Grain Texture Overlay */}
-        <div className="film-grain" />
-
         {children}
       </body>
     </html>
