@@ -312,7 +312,7 @@ export default function FilmStripBrowser({ onSelectProject }: FilmStripBrowserPr
                 }`}
               >
                 <Film className="w-3 h-3" />
-                <span>DUAL REEL</span>
+                <span>{selectedCategory === "ALL" ? "DUAL REEL" : "CONTINUOUS REEL"}</span>
               </button>
 
               <button
@@ -393,7 +393,11 @@ export default function FilmStripBrowser({ onSelectProject }: FilmStripBrowserPr
             {viewMode === "dual-reel" ? (
               <>
                 <Film className="w-3 h-3 text-[#d4af37] animate-pulse" />
-                <span>ROW 1 SCROLLS LEFT ◄ | ROW 2 SCROLLS RIGHT ► • HOVER TO PAUSE</span>
+                <span>
+                  {selectedCategory === "ALL"
+                    ? "ROW 1 SCROLLS LEFT ◄ | ROW 2 SCROLLS RIGHT ► • HOVER TO PAUSE"
+                    : "CONTINUOUS REEL SCROLLS LEFT ◄ • HOVER TO PAUSE"}
+                </span>
               </>
             ) : viewMode === "strip" ? (
               <>
@@ -476,47 +480,52 @@ export default function FilmStripBrowser({ onSelectProject }: FilmStripBrowserPr
               </div>
             </div>
 
-            {/* Middle Sprocket Separator Bar */}
-            <div className="w-full flex items-center justify-between py-1.5 px-4 bg-[#09090c] border-t border-b border-[rgba(255,255,255,0.06)] my-3 overflow-hidden">
-              <div className="flex items-center gap-3 grow overflow-hidden">
-                {Array.from({ length: 36 }).map((_, i) => (
-                  <div key={i} className="flex items-center gap-3 shrink-0">
-                    <div className="w-3 h-1.5 rounded-[1px] bg-[#050507] border border-[rgba(255,255,255,0.08)]" />
-                    <span className="font-mono text-[7px] text-[rgba(212,175,55,0.4)] tracking-wider">
-                      FARHAN P. ZAMMA • 24 FPS
-                    </span>
+            {/* Middle Sprocket Separator Bar & Row B: ONLY for "ALL" (other categories keep single layer) */}
+            {selectedCategory === "ALL" && (
+              <>
+                {/* Middle Sprocket Separator Bar */}
+                <div className="w-full flex items-center justify-between py-1.5 px-4 bg-[#09090c] border-t border-b border-[rgba(255,255,255,0.06)] my-3 overflow-hidden">
+                  <div className="flex items-center gap-3 grow overflow-hidden">
+                    {Array.from({ length: 36 }).map((_, i) => (
+                      <div key={i} className="flex items-center gap-3 shrink-0">
+                        <div className="w-3 h-1.5 rounded-[1px] bg-[#050507] border border-[rgba(255,255,255,0.08)]" />
+                        <span className="font-mono text-[7px] text-[rgba(212,175,55,0.4)] tracking-wider">
+                          FARHAN P. ZAMMA • 24 FPS
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <span className="font-mono text-[8px] text-[rgba(255,255,255,0.4)] tracking-widest shrink-0 uppercase ml-4">
-                4K DCI • HDR10 • MULTI-TRACK
-              </span>
-            </div>
+                  <span className="font-mono text-[8px] text-[rgba(255,255,255,0.4)] tracking-widest shrink-0 uppercase ml-4">
+                    4K DCI • HDR10 • MULTI-TRACK
+                  </span>
+                </div>
 
-            {/* ── ROW B: SCROLLS CONTINUOUSLY TO THE RIGHT ── */}
-            <div
-              className="relative overflow-hidden mb-4"
-              onMouseEnter={() => pauseRow(rowBRef)}
-              onMouseLeave={() => resumeRow(rowBRef)}
-            >
-              <div
-                ref={rowBRef}
-                className="flex gap-4 sm:gap-6 will-change-transform"
-                style={{
-                  animation: `marqueeRight 58s linear infinite`,
-                  animationPlayState: isMarqueePaused ? "paused" : "running",
-                  width: "max-content",
-                }}
-              >
-                {rowBProjects.map((project, i) => (
-                  <DualReelCard
-                    key={`row-b-${project.id}-${i}`}
-                    project={project}
-                    onSelectProject={onSelectProject}
-                  />
-                ))}
-              </div>
-            </div>
+                {/* ── ROW B: SCROLLS CONTINUOUSLY TO THE RIGHT ── */}
+                <div
+                  className="relative overflow-hidden mb-4"
+                  onMouseEnter={() => pauseRow(rowBRef)}
+                  onMouseLeave={() => resumeRow(rowBRef)}
+                >
+                  <div
+                    ref={rowBRef}
+                    className="flex gap-4 sm:gap-6 will-change-transform"
+                    style={{
+                      animation: `marqueeRight 58s linear infinite`,
+                      animationPlayState: isMarqueePaused ? "paused" : "running",
+                      width: "max-content",
+                    }}
+                  >
+                    {rowBProjects.map((project, i) => (
+                      <DualReelCard
+                        key={`row-b-${project.id}-${i}`}
+                        project={project}
+                        onSelectProject={onSelectProject}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
 
             {/* Bottom Sprocket Holes Bar */}
             <div className="w-full flex items-center gap-6 py-2 px-4 bg-[#0e0e12] border-t border-b border-[rgba(255,255,255,0.08)] mt-2 overflow-hidden">
