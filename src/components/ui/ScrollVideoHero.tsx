@@ -13,145 +13,90 @@ export default function ScrollVideoHero({
   onPlayShowreel,
 }: ScrollVideoHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const heroOverlayRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+  const progressTextRef = useRef<HTMLSpanElement>(null);
+
+  // Track whether video is ready
+  const videoReadyRef = useRef(false);
+  // Scroll state kept in refs to avoid re-renders in the hot path
+  const rawProgressRef = useRef(0);
+  const smoothProgressRef = useRef(0);
+  const rafIdRef = useRef<number>(0);
+  const isSeekingRef = useRef(false);
+  const targetTimeRef = useRef(0.001);
+  const scheduledRef = useRef(false);
+
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Preload video into in-memory Blob to completely eliminate Vercel network range request lag
+  // Video load handler
   useEffect(() => {
-    let active = true;
-    let objectUrl: string | null = null;
     const video = videoRef.current;
+    if (!video) return;
 
-    // Fast initial metadata load
-    if (video) {
-      video.preload = "auto";
-      const handleLoadedData = () => {
-        setVideoLoaded(true);
-        if (video.currentTime === 0) {
-          video.currentTime = 0.001;
-        }
-      };
+    const onReady = () => {
+      videoReadyRef.current = true;
+      setVideoLoaded(true);
+      // Show first frame immediately
+      if (video.currentTime === 0) video.currentTime = 0.001;
+    };
 
-      if (video.readyState >= 2) {
-        handleLoadedData();
-      } else {
-        video.addEventListener("loadeddata", handleLoadedData, { once: true });
-        video.addEventListener("canplay", handleLoadedData, { once: true });
-      }
+    if (video.readyState >= 2) {
+      onReady();
+    } else {
+      video.addEventListener("canplay", onReady, { once: true });
+      video.addEventListener("loadeddata", onReady, { once: true });
     }
 
-    // In background, buffer the entire 2.8MB video into local device RAM
-    // This allows instant 0ms seeking without network requests on Vercel
-    fetch("/video/bg.mp4")
-      .then((res) => {
-        if (!res.ok) throw new Error("Fetch failed");
-        return res.blob();
-      })
-      .then((blob) => {
-        if (!active) return;
-        objectUrl = URL.createObjectURL(blob);
-        if (videoRef.current) {
-          const currentT = videoRef.current.currentTime || 0.001;
-          videoRef.current.src = objectUrl;
-          videoRef.current.currentTime = currentT;
-          videoRef.current.load();
-        }
-      })
-      .catch(() => {
-        // Fallback remains direct /video/bg.mp4
-      });
-
     return () => {
-      active = false;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      video.removeEventListener("canplay", onReady);
+      video.removeEventListener("loadeddata", onReady);
     };
   }, []);
 
+  // Main scroll-scrub engine — pure DOM manipulation, zero React re-renders
   useEffect(() => {
-    const canvas = canvasRef.current;
+    if (!videoLoaded) return;
+
     const video = videoRef.current;
     const container = containerRef.current;
-    if (!canvas || !video || !container) return;
-    
-    const ctx = canvas.getContext("2d", { alpha: false });
-    if (!ctx) return;
+    const heroOverlay = heroOverlayRef.current;
+    const indicator = indicatorRef.current;
+    const progressBar = progressBarRef.current;
+    const progressText = progressTextRef.current;
+    if (!video || !container) return;
 
-    let rafId: number;
-    let rvfcId: number | null = null;
-    let rawProgress = 0;
-    let smoothProgress = 0;
-    let targetTime = 0.001;
-    let isSeeking = false;
-    let needsDraw = true;
-
-    // Use medium smoothing for high performance without GPU overhead
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "medium";
-
-    const drawFrame = () => {
-      if (!video || video.readyState < 2) return;
-      
-      const canvasRatio = canvas.width / canvas.height;
-      const videoRatio = (video.videoWidth || 16) / (video.videoHeight || 9);
-      
-      let drawWidth = canvas.width;
-      let drawHeight = canvas.height;
-      let offsetX = 0;
-      let offsetY = 0;
-
-      const isPortrait = canvasRatio < 1.0;
-      const isMobileWidth = canvas.width < 768;
-
-      if (isPortrait || isMobileWidth) {
-        const mobileScale = 1.92;
-        drawWidth = canvas.width * mobileScale;
-        drawHeight = drawWidth / videoRatio;
-        offsetX = (canvas.width - drawWidth) / 2;
-        offsetY = (canvas.height - drawHeight) * 0.42;
-      } else if (canvasRatio > videoRatio) {
-        drawHeight = canvas.width / videoRatio;
-        offsetY = (canvas.height - drawHeight) / 2;
-      } else {
-        drawWidth = canvas.height * videoRatio;
-        offsetX = (canvas.width - drawWidth) / 2;
+    const updateDOM = (progress: number) => {
+      // Hero overlay fade
+      if (heroOverlay) {
+        heroOverlay.style.opacity = String(Math.max(0, 1 - progress * 3.2));
       }
-
-      // Fast hardware clear only if margins exist
-      if (offsetX !== 0 || offsetY !== 0) {
-        ctx.fillStyle = "#060608";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Progress indicator visibility
+      if (indicator) {
+        indicator.style.opacity =
+          progress > 0.05 && progress < 0.82 ? "0.75" : "0";
       }
-
-      ctx.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
+      if (progressBar) {
+        progressBar.style.width = `${progress * 100}%`;
+      }
+      if (progressText) {
+        progressText.textContent = `SCROLL TO SCRUB FILM • ${Math.round(progress * 100)}%`;
+      }
     };
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "medium";
-      needsDraw = true;
-      drawFrame();
-    };
+    const seekVideo = (time: number) => {
+      if (!video.duration || isNaN(video.duration)) return;
+      if (isSeekingRef.current) return;
 
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    const seekToTarget = (time: number) => {
-      if (!video || !video.duration || isNaN(video.duration)) return;
-      if (isSeeking) return;
-
-      const duration = video.duration;
       const clampedTime = Math.min(
-        Math.max(0.001, duration - 0.05),
+        Math.max(0.001, video.duration - 0.05),
         Math.max(0.001, time)
       );
 
-      if (Math.abs(video.currentTime - clampedTime) > 0.008) {
-        isSeeking = true;
-        // fastSeek if available in browser for instant seek, fallback to currentTime
+      if (Math.abs(video.currentTime - clampedTime) > 0.016) {
+        isSeekingRef.current = true;
         if ("fastSeek" in video && typeof (video as any).fastSeek === "function") {
           (video as any).fastSeek(clampedTime);
         } else {
@@ -161,91 +106,66 @@ export default function ScrollVideoHero({
     };
 
     const handleSeeked = () => {
-      isSeeking = false;
-      needsDraw = true;
-      drawFrame();
-      seekToTarget(targetTime);
+      isSeekingRef.current = false;
+      // If target moved while seeking, catch up
+      seekVideo(targetTimeRef.current);
+    };
+    video.addEventListener("seeked", handleSeeked);
+
+    // rAF loop: smooth progress toward raw, then seek video + update DOM
+    const loop = () => {
+      scheduledRef.current = false;
+      const raw = rawProgressRef.current;
+      const smooth = smoothProgressRef.current;
+      const diff = raw - smooth;
+
+      if (Math.abs(diff) > 0.0002) {
+        // Lerp factor: 0.12 on desktop, 0.10 on mobile for extra smoothness
+        const lerpFactor = window.innerWidth < 768 ? 0.10 : 0.12;
+        smoothProgressRef.current = smooth + diff * lerpFactor;
+      } else {
+        smoothProgressRef.current = raw;
+      }
+
+      const sp = smoothProgressRef.current;
+      updateDOM(sp);
+
+      if (video.duration && !isNaN(video.duration)) {
+        targetTimeRef.current = sp * video.duration;
+        seekVideo(targetTimeRef.current);
+      }
+
+      // Keep loop running as long as we're not settled
+      if (Math.abs(raw - sp) > 0.0001) {
+        scheduledRef.current = true;
+        rafIdRef.current = requestAnimationFrame(loop);
+      }
     };
 
     const handleScroll = () => {
       if (!container) return;
-      
       const { top, height } = container.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const scrollableDistance = height - viewportHeight;
-      
-      if (top <= 0) {
-        rawProgress = Math.min(1, Math.max(0, -top / Math.max(1, scrollableDistance)));
-      } else {
-        rawProgress = 0;
+      const viewportH = window.innerHeight;
+      const scrollable = height - viewportH;
+
+      rawProgressRef.current =
+        top <= 0 ? Math.min(1, Math.max(0, -top / Math.max(1, scrollable))) : 0;
+
+      // Schedule a rAF only if one isn't pending
+      if (!scheduledRef.current) {
+        scheduledRef.current = true;
+        rafIdRef.current = requestAnimationFrame(loop);
       }
     };
-
-    video.addEventListener("seeked", handleSeeked);
-    video.addEventListener("timeupdate", () => {
-      needsDraw = true;
-    });
-
-    // Native hardware video frame callback for 60/120Hz frame output
-    const onVideoFrame = () => {
-      needsDraw = true;
-      drawFrame();
-      if ("requestVideoFrameCallback" in video) {
-        rvfcId = (video as any).requestVideoFrameCallback(onVideoFrame);
-      }
-    };
-    if ("requestVideoFrameCallback" in video) {
-      rvfcId = (video as any).requestVideoFrameCallback(onVideoFrame);
-    }
-
-    if (videoLoaded) {
-      drawFrame();
-      handleScroll();
-    }
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
-    // Idle-aware 60fps/120fps loop with fluid inertia damping
-    const loop = () => {
-      const diff = rawProgress - smoothProgress;
-      if (Math.abs(diff) > 0.0001) {
-        // Fluid cinematic damping: 0.09 gives responsive, instantaneous glide
-        smoothProgress += diff * 0.09;
-        setScrollProgress(smoothProgress);
-        needsDraw = true;
-
-        if (video && video.duration && !isNaN(video.duration)) {
-          targetTime = smoothProgress * video.duration;
-          seekToTarget(targetTime);
-        }
-      } else if (smoothProgress !== rawProgress) {
-        smoothProgress = rawProgress;
-        setScrollProgress(smoothProgress);
-        needsDraw = true;
-
-        if (video && video.duration && !isNaN(video.duration)) {
-          targetTime = smoothProgress * video.duration;
-          seekToTarget(targetTime);
-        }
-      }
-
-      if (needsDraw) {
-        drawFrame();
-        needsDraw = false;
-      }
-
-      rafId = requestAnimationFrame(loop);
-    };
-    rafId = requestAnimationFrame(loop);
+    // Draw initial state
+    updateDOM(0);
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("scroll", handleScroll);
       video.removeEventListener("seeked", handleSeeked);
-      if (rvfcId !== null && "cancelVideoFrameCallback" in video) {
-        (video as any).cancelVideoFrameCallback(rvfcId);
-      }
-      cancelAnimationFrame(rafId);
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
   }, [videoLoaded]);
 
@@ -254,37 +174,35 @@ export default function ScrollVideoHero({
       ref={containerRef}
       className="relative w-full h-[420vh] bg-[#060608]"
     >
-      {/* Hidden preloaded video */}
-      <video
-        ref={videoRef}
-        src="/video/bg.mp4"
-        className="absolute opacity-0 pointer-events-none -z-50"
-        style={{ width: "1px", height: "1px" }}
-        playsInline
-        muted
-        preload="auto"
-      />
-      
-      {/* Pinned Sticky Viewport */}
-      <div
-        className="sticky top-0 w-full h-screen overflow-hidden"
-        style={{ position: "sticky", top: 0 }}
-      >
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full object-cover z-0 bg-[#060608]"
+      {/* 
+        Native <video> element — no canvas.
+        Mobile browsers hardware-decode & composite video natively,
+        which is FAR faster than canvas drawImage on low-end devices.
+      */}
+      <div className="sticky top-0 w-full h-screen overflow-hidden">
+        <video
+          ref={videoRef}
+          src="/video/bg.mp4"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          style={{ objectPosition: "center center" }}
+          playsInline
+          muted
+          preload="auto"
+          // Prevent autoplay — we scrub manually
+          autoPlay={false}
         />
-        
-        {/* Cinematic Vignette Overlay to blend video into content at bottom */}
+
+        {/* Cinematic Vignette Overlay */}
         <div className="absolute inset-0 z-[1] pointer-events-none">
           <div className="absolute top-0 left-0 right-0 h-44 sm:h-36 bg-gradient-to-b from-[#060608] via-[#060608]/70 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 h-52 sm:h-44 bg-gradient-to-t from-[#060608] via-[#060608]/85 to-transparent" />
         </div>
-        
-        {/* Hero Title and Action Buttons (smoothly fades out as scrolling begins) */}
-        <div 
-          className="absolute inset-0 z-10 pointer-events-none transition-opacity duration-300"
-          style={{ opacity: Math.max(0, 1 - scrollProgress * 3.2) }} 
+
+        {/* Hero Title & Action Buttons — fades as scroll begins */}
+        <div
+          ref={heroOverlayRef}
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{ opacity: 1 }}
         >
           <div className="pointer-events-auto h-full">
             <HeroCinematic
@@ -294,20 +212,23 @@ export default function ScrollVideoHero({
           </div>
         </div>
 
-        {/* Cinematic Scroll Indicator (Visible during video scrubbing) */}
+        {/* Cinematic Scroll Indicator */}
         <div
-          className="absolute bottom-16 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center gap-1.5 transition-opacity duration-500"
-          style={{
-            opacity: scrollProgress > 0.05 && scrollProgress < 0.82 ? 0.75 : 0,
-          }}
+          ref={indicatorRef}
+          className="absolute bottom-16 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center gap-1.5"
+          style={{ opacity: 0, transition: "opacity 0.5s ease" }}
         >
-          <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-[#d4af37]/80">
-            SCROLL TO SCRUB FILM • {Math.round(scrollProgress * 100)}%
+          <span
+            ref={progressTextRef}
+            className="text-[10px] font-mono tracking-[0.3em] uppercase text-[#d4af37]/80"
+          >
+            SCROLL TO SCRUB FILM • 0%
           </span>
           <div className="w-24 h-[2px] bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#d4af37] transition-all duration-75"
-              style={{ width: `${scrollProgress * 100}%` }}
+              ref={progressBarRef}
+              className="h-full bg-[#d4af37]"
+              style={{ width: "0%" }}
             />
           </div>
         </div>
