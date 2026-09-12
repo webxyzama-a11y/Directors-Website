@@ -19,13 +19,14 @@ export default function ScrollVideoHero({
   const progressBarRef = useRef<HTMLDivElement>(null);
   const progressTextRef = useRef<HTMLSpanElement>(null);
 
-  // Track whether video is ready
+  // Track video readiness
   const videoReadyRef = useRef(false);
   // Scroll state kept in refs to avoid re-renders in the hot path
   const rawProgressRef = useRef(0);
   const smoothProgressRef = useRef(0);
   const rafIdRef = useRef<number>(0);
   const isSeekingRef = useRef(false);
+  const seekTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const targetTimeRef = useRef(0.001);
   const scheduledRef = useRef(false);
 
@@ -35,6 +36,9 @@ export default function ScrollVideoHero({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    video.muted = true;
+    video.playsInline = true;
 
     const onReady = () => {
       videoReadyRef.current = true;
@@ -48,6 +52,7 @@ export default function ScrollVideoHero({
     } else {
       video.addEventListener("canplay", onReady, { once: true });
       video.addEventListener("loadeddata", onReady, { once: true });
+      video.load();
     }
 
     return () => {
@@ -95,17 +100,20 @@ export default function ScrollVideoHero({
         Math.max(0.001, time)
       );
 
-      if (Math.abs(video.currentTime - clampedTime) > 0.016) {
+      if (Math.abs(video.currentTime - clampedTime) > 0.012) {
         isSeekingRef.current = true;
-        if ("fastSeek" in video && typeof (video as any).fastSeek === "function") {
-          (video as any).fastSeek(clampedTime);
-        } else {
-          video.currentTime = clampedTime;
-        }
+        video.currentTime = clampedTime;
+
+        // Watchdog timeout: release seek lock after 120ms if browser drops seeked event
+        if (seekTimeoutRef.current) clearTimeout(seekTimeoutRef.current);
+        seekTimeoutRef.current = setTimeout(() => {
+          isSeekingRef.current = false;
+        }, 120);
       }
     };
 
     const handleSeeked = () => {
+      if (seekTimeoutRef.current) clearTimeout(seekTimeoutRef.current);
       isSeekingRef.current = false;
       // If target moved while seeking, catch up
       seekVideo(targetTimeRef.current);
@@ -120,7 +128,6 @@ export default function ScrollVideoHero({
       const diff = raw - smooth;
 
       if (Math.abs(diff) > 0.0002) {
-        // Lerp factor: 0.12 on desktop, 0.10 on mobile for extra smoothness
         const lerpFactor = window.innerWidth < 768 ? 0.10 : 0.12;
         smoothProgressRef.current = smooth + diff * lerpFactor;
       } else {
@@ -135,7 +142,7 @@ export default function ScrollVideoHero({
         seekVideo(targetTimeRef.current);
       }
 
-      // Keep loop running as long as we're not settled
+      // Keep loop running as long as progress hasn't settled
       if (Math.abs(raw - sp) > 0.0001) {
         scheduledRef.current = true;
         rafIdRef.current = requestAnimationFrame(loop);
@@ -159,12 +166,13 @@ export default function ScrollVideoHero({
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    // Draw initial state
+    // Initialize state
     updateDOM(0);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       video.removeEventListener("seeked", handleSeeked);
+      if (seekTimeoutRef.current) clearTimeout(seekTimeoutRef.current);
       if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
   }, [videoLoaded]);
@@ -175,24 +183,22 @@ export default function ScrollVideoHero({
       className="relative w-full h-[420vh] bg-[#060608]"
     >
       {/* 
-        Native <video> element — no canvas.
-        Mobile browsers hardware-decode & composite video natively,
-        which is FAR faster than canvas drawImage on low-end devices.
+        Native <video> element with responsive .hero-video-frame:
+        - Full bleed on desktop screens
+        - Perfectly scaled & horizontally balanced on mobile phones so the director's name and title are 100% visible
       */}
-      <div className="sticky top-0 w-full h-screen overflow-hidden">
+      <div className="sticky top-0 w-full h-screen h-[100dvh] overflow-hidden bg-[#060608]">
         <video
           ref={videoRef}
           src="/video/bg.mp4"
-          className="absolute inset-0 w-full h-full object-cover z-0"
-          style={{ objectPosition: "center center" }}
+          className="hero-video-frame"
           playsInline
           muted
           preload="auto"
-          // Prevent autoplay — we scrub manually
           autoPlay={false}
         />
 
-        {/* Cinematic Vignette Overlay */}
+        {/* Cinematic Vignette Overlay to blend video into obsidian void */}
         <div className="absolute inset-0 z-[1] pointer-events-none">
           <div className="absolute top-0 left-0 right-0 h-44 sm:h-36 bg-gradient-to-b from-[#060608] via-[#060608]/70 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 h-52 sm:h-44 bg-gradient-to-t from-[#060608] via-[#060608]/85 to-transparent" />
