@@ -23,7 +23,6 @@ export default function CinematicHeader({
   currentSection,
   onNavigate,
 }: CinematicHeaderProps) {
-  const [timecode, setTimecode] = useState("01:13:80:00");
   const [isMuted, setIsMuted] = useState(soundEngine.isMuted);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -34,30 +33,6 @@ export default function CinematicHeader({
       setIsMuted(muted);
     });
     return () => unsubscribe();
-  }, []);
-
-  // Live 24fps timecode simulation
-  useEffect(() => {
-    let frame = 0;
-    let sec = 13;
-    let min = 1;
-    let hour = 1;
-
-    const interval = setInterval(() => {
-      frame++;
-      if (frame >= 24) {
-        frame = 0;
-        sec++;
-        if (sec >= 60) {
-          sec = 0;
-          min++;
-        }
-      }
-      const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
-      setTimecode(`${pad(hour)}:${pad(min)}:${pad(sec)}:${pad(frame)}`);
-    }, 1000 / 24);
-
-    return () => clearInterval(interval);
   }, []);
 
   const handleToggleSound = () => {
@@ -84,22 +59,13 @@ export default function CinematicHeader({
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 md:px-8 py-3 sm:py-4 backdrop-blur-md bg-[rgba(6,6,8,0.85)] border-b border-[rgba(255,255,255,0.06)] flex items-center justify-between text-xs tracking-widest uppercase font-mono">
-        {/* Left: Timecode & Camera Specs */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <span className="text-[9px] sm:text-[10px] text-[rgba(255,255,255,0.4)]">TC</span>
-            <span className="font-bold text-[#f5f5f7] tracking-wider text-xs sm:text-sm">
-              {timecode}
-            </span>
-          </div>
-          <span className="hidden sm:inline-block text-[rgba(255,255,255,0.2)]">|</span>
-          <div className="hidden sm:flex items-center gap-2 text-[10px] text-[rgba(255,255,255,0.5)]">
-            <span>ARRI LF</span>
-            <span className="w-1 h-1 rounded-full bg-[rgba(255,255,255,0.2)]" />
-            <span>4K DCI</span>
-            <span className="w-1 h-1 rounded-full bg-[rgba(255,255,255,0.2)]" />
-            <span>2.39:1</span>
-          </div>
+        {/* Left: Camera Specs */}
+        <div className="flex items-center gap-2 text-[10px] text-[rgba(255,255,255,0.6)]">
+          <span className="text-[#d4af37] font-semibold">ARRI LF</span>
+          <span className="w-1 h-1 rounded-full bg-[rgba(255,255,255,0.2)]" />
+          <span>4K DCI</span>
+          <span className="hidden sm:inline-block w-1 h-1 rounded-full bg-[rgba(255,255,255,0.2)]" />
+          <span className="hidden sm:inline-block">2.39:1</span>
         </div>
 
         {/* Center: Desktop Navigation Links */}
@@ -272,7 +238,7 @@ export default function CinematicHeader({
             </div>
 
             <div className="flex items-center justify-between text-[10px] text-white/40 pt-2">
-              <span>TC {timecode}</span>
+              <span>ARRI LF • 4K DCI</span>
               <span>2.39:1 CINEMATIC SCOPE</span>
             </div>
           </div>
