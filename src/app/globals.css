@@ -57,6 +57,9 @@ body {
   opacity: 0.025;
   background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
   background-size: 4px 4px;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* Anamorphic Blue Streak / Flare Line */

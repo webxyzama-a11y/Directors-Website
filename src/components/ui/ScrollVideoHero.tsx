@@ -18,8 +18,13 @@ export default function ScrollVideoHero({
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  // Preload video into in-memory Blob to completely eliminate Vercel network range request lag
   useEffect(() => {
+    let active = true;
+    let objectUrl: string | null = null;
     const video = videoRef.current;
+
+    // Fast initial metadata load
     if (video) {
       video.preload = "auto";
       const handleLoadedData = () => {
@@ -32,17 +37,36 @@ export default function ScrollVideoHero({
       if (video.readyState >= 2) {
         handleLoadedData();
       } else {
-        video.addEventListener("loadeddata", handleLoadedData);
-        video.addEventListener("canplay", handleLoadedData);
+        video.addEventListener("loadeddata", handleLoadedData, { once: true });
+        video.addEventListener("canplay", handleLoadedData, { once: true });
       }
-      
-      video.load();
-      
-      return () => {
-        video.removeEventListener("loadeddata", handleLoadedData);
-        video.removeEventListener("canplay", handleLoadedData);
-      };
     }
+
+    // In background, buffer the entire 2.8MB video into local device RAM
+    // This allows instant 0ms seeking without network requests on Vercel
+    fetch("/video/bg.mp4")
+      .then((res) => {
+        if (!res.ok) throw new Error("Fetch failed");
+        return res.blob();
+      })
+      .then((blob) => {
+        if (!active) return;
+        objectUrl = URL.createObjectURL(blob);
+        if (videoRef.current) {
+          const currentT = videoRef.current.currentTime || 0.001;
+          videoRef.current.src = objectUrl;
+          videoRef.current.currentTime = currentT;
+          videoRef.current.load();
+        }
+      })
+      .catch(() => {
+        // Fallback remains direct /video/bg.mp4
+      });
+
+    return () => {
+      active = false;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
   }, []);
 
   useEffect(() => {
@@ -60,10 +84,11 @@ export default function ScrollVideoHero({
     let smoothProgress = 0;
     let targetTime = 0.001;
     let isSeeking = false;
+    let needsDraw = true;
 
-    // Enable hardware-accelerated high-quality frame interpolation
+    // Use medium smoothing for high performance without GPU overhead
     ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
+    ctx.imageSmoothingQuality = "medium";
 
     const drawFrame = () => {
       if (!video || video.readyState < 2) return;
@@ -93,8 +118,12 @@ export default function ScrollVideoHero({
         offsetX = (canvas.width - drawWidth) / 2;
       }
 
-      ctx.fillStyle = "#060608";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Fast hardware clear only if margins exist
+      if (offsetX !== 0 || offsetY !== 0) {
+        ctx.fillStyle = "#060608";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
       ctx.drawImage(video, offsetX, offsetY, drawWidth, drawHeight);
     };
 
@@ -102,7 +131,8 @@ export default function ScrollVideoHero({
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
+      ctx.imageSmoothingQuality = "medium";
+      needsDraw = true;
       drawFrame();
     };
 
@@ -121,12 +151,18 @@ export default function ScrollVideoHero({
 
       if (Math.abs(video.currentTime - clampedTime) > 0.008) {
         isSeeking = true;
-        video.currentTime = clampedTime;
+        // fastSeek if available in browser for instant seek, fallback to currentTime
+        if ("fastSeek" in video && typeof (video as any).fastSeek === "function") {
+          (video as any).fastSeek(clampedTime);
+        } else {
+          video.currentTime = clampedTime;
+        }
       }
     };
 
     const handleSeeked = () => {
       isSeeking = false;
+      needsDraw = true;
       drawFrame();
       seekToTarget(targetTime);
     };
@@ -146,10 +182,13 @@ export default function ScrollVideoHero({
     };
 
     video.addEventListener("seeked", handleSeeked);
-    video.addEventListener("timeupdate", drawFrame);
+    video.addEventListener("timeupdate", () => {
+      needsDraw = true;
+    });
 
     // Native hardware video frame callback for 60/120Hz frame output
     const onVideoFrame = () => {
+      needsDraw = true;
       drawFrame();
       if ("requestVideoFrameCallback" in video) {
         rvfcId = (video as any).requestVideoFrameCallback(onVideoFrame);
@@ -166,13 +205,14 @@ export default function ScrollVideoHero({
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     
-    // Continuous liquid-smooth momentum interpolation loop (60fps / 120fps)
+    // Idle-aware 60fps/120fps loop with fluid inertia damping
     const loop = () => {
       const diff = rawProgress - smoothProgress;
-      if (Math.abs(diff) > 0.00015) {
-        // Fluid cinematic damping: 0.082 gives a luxurious camera dolly feel
-        smoothProgress += diff * 0.082;
+      if (Math.abs(diff) > 0.0001) {
+        // Fluid cinematic damping: 0.09 gives responsive, instantaneous glide
+        smoothProgress += diff * 0.09;
         setScrollProgress(smoothProgress);
+        needsDraw = true;
 
         if (video && video.duration && !isNaN(video.duration)) {
           targetTime = smoothProgress * video.duration;
@@ -181,13 +221,19 @@ export default function ScrollVideoHero({
       } else if (smoothProgress !== rawProgress) {
         smoothProgress = rawProgress;
         setScrollProgress(smoothProgress);
+        needsDraw = true;
+
         if (video && video.duration && !isNaN(video.duration)) {
           targetTime = smoothProgress * video.duration;
           seekToTarget(targetTime);
         }
       }
 
-      drawFrame();
+      if (needsDraw) {
+        drawFrame();
+        needsDraw = false;
+      }
+
       rafId = requestAnimationFrame(loop);
     };
     rafId = requestAnimationFrame(loop);
@@ -196,7 +242,6 @@ export default function ScrollVideoHero({
       window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("scroll", handleScroll);
       video.removeEventListener("seeked", handleSeeked);
-      video.removeEventListener("timeupdate", drawFrame);
       if (rvfcId !== null && "cancelVideoFrameCallback" in video) {
         (video as any).cancelVideoFrameCallback(rvfcId);
       }
@@ -227,7 +272,7 @@ export default function ScrollVideoHero({
       >
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full object-cover z-0"
+          className="absolute inset-0 w-full h-full object-cover z-0 bg-[#060608]"
         />
         
         {/* Cinematic Vignette Overlay to blend video into content at bottom */}
