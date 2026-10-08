@@ -319,66 +319,6 @@ export const PROJECTS_DATA: Project[] = [
     ]
   },
   {
-    id: "hustle-queen-kajal",
-    title: "Hustle Queen KAJAL",
-    year: "2024",
-    category: "MICRODRAMA",
-    role: "Director",
-    client: "Jio / Microdrama Originals",
-    format: "Bite-Sized Character Promo / Microdrama",
-    aspectRatio: "9:16 Mobile Native",
-    logline: "Fierce, ambitious, and refusing to take no for an answer — meet the undisputed Hustle Queen Kajal.",
-    synopsis: "Directed by Farhan P. Zamma, this punchy microdrama promo brings Kajal's relentless ambition and wit front and center with crisp vertical framing and stylish neon-lit aesthetics.",
-    youtubeId: "MEohgRcmIFM",
-    vimeoId: "1210411693",
-    videoPreviewUrl: "https://vimeo.com/1210411693?fl=tl&fe=ec",
-    posterUrl: "/hustle-queen-kajal-thumb.jpg",
-    bannerUrl: "/hustle-queen-kajal-thumb.jpg",
-    stats: {
-      episodes: "Character Series",
-      views: "Trending Promo",
-      completionRate: "90%+ Retention"
-    },
-    credits: [
-      { role: "Director", name: "Farhan P. Zamma" },
-      { role: "Platform", name: "Jio / Digital Release" },
-      { role: "Format", name: "Microdrama Character Promo" }
-    ],
-    behindTheScenes: [
-      "Optimized for high-contrast mobile screen viewing with sharp visual comedy timing."
-    ]
-  },
-  {
-    id: "cringe-king-pratya",
-    title: "Cringe King PRATYA",
-    year: "2024",
-    category: "MICRODRAMA",
-    role: "Director",
-    client: "Jio / Microdrama Originals",
-    format: "Bite-Sized Character Promo / Microdrama",
-    aspectRatio: "9:16 Mobile Native",
-    logline: "Unabashedly eccentric and hilariously chaotic — step into the zany world of Pratya.",
-    synopsis: "Farhan P. Zamma directs 'Cringe King PRATYA', an outrageously energetic vertical promo highlighting comedic timing, vibrant expressions, and viral-ready micro-storytelling.",
-    youtubeId: "MEohgRcmIFM",
-    vimeoId: "1210411299",
-    videoPreviewUrl: "https://vimeo.com/1210411299?fl=tl&fe=ec",
-    posterUrl: "/cringe-king-pratya-thumb.jpg",
-    bannerUrl: "/cringe-king-pratya-thumb.jpg",
-    stats: {
-      episodes: "Character Series",
-      views: "Top Engagement",
-      shares: "Viral Shares"
-    },
-    credits: [
-      { role: "Director", name: "Farhan P. Zamma" },
-      { role: "Platform", name: "Jio / Digital Release" },
-      { role: "Format", name: "Microdrama Character Promo" }
-    ],
-    behindTheScenes: [
-      "Rapid-fire visual gags captured with ultra-responsive handheld rigs."
-    ]
-  },
-  {
     id: "combine-promo",
     title: "COMBINE PROMO",
     year: "2024",
