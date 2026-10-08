@@ -48,8 +48,11 @@ export interface Project {
   logline: string;
   synopsis: string;
   youtubeId: string;
+  vimeoId?: string;
+  videoPreviewUrl?: string;
   teaserYoutubeId?: string;
   externalUrl?: string;
+  instagramUrl?: string;
   posterUrl: string;
   bannerUrl: string;
   stats: ProjectStats;

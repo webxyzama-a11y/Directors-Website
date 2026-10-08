@@ -121,7 +121,7 @@ export default function StoryboardCompare() {
             style={{ clipPath: `inset(0 0 0 ${Math.max(0, 100 - (sliderPos - 40) * 2)}%)` }}
           >
             <img
-              src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1800&q=80"
+              src="/images/works/first-copy.png"
               alt="Final Film Master"
               className="w-full h-full object-cover filter contrast-125 saturate-110"
             />

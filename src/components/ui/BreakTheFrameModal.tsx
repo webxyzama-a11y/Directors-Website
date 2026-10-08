@@ -64,14 +64,24 @@ export default function BreakTheFrameModal({ project, onClose }: BreakTheFrameMo
 
         {/* Cinematic Video Player Viewport */}
         <div className="relative aspect-video w-full bg-black">
-          {isPlayingVideo && project.youtubeId ? (
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${project.youtubeId}?autoplay=1&mute=0&rel=0&modestbranding=1&showinfo=0`}
-              title={project.title}
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+          {isPlayingVideo && (project.vimeoId || project.youtubeId) ? (
+            project.vimeoId ? (
+              <iframe
+                src={`https://player.vimeo.com/video/${project.vimeoId}?autoplay=1&badge=0&autopause=0&player_id=0&color=d4af37`}
+                title={project.title}
+                className="w-full h-full border-0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${project.youtubeId}?autoplay=1&mute=0&rel=0&modestbranding=1&showinfo=0`}
+                title={project.title}
+                className="w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )
           ) : (
             <div className="relative w-full h-full">
               <img
@@ -87,7 +97,7 @@ export default function BreakTheFrameModal({ project, onClose }: BreakTheFrameMo
                   <Play className="w-7 h-7 fill-black ml-1" />
                 </button>
                 <span className="font-mono text-xs tracking-widest text-white uppercase">
-                  PLAY OFFICIAL FOOTAGE
+                  {project.vimeoId ? "PLAY VIDEO PREVIEW" : "PLAY OFFICIAL FOOTAGE"}
                 </span>
               </div>
             </div>
@@ -111,17 +121,41 @@ export default function BreakTheFrameModal({ project, onClose }: BreakTheFrameMo
               </h2>
             </div>
 
-            {project.externalUrl && (
-              <a
-                href={project.externalUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="self-start inline-flex items-center gap-2 px-4 py-2 rounded border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.05)] hover:border-[#d4af37] hover:text-[#d4af37] text-xs font-mono tracking-wider transition-all"
-              >
-                <span>VIEW ON PLATFORM</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            )}
+            <div className="flex items-center gap-2 self-start flex-wrap">
+              {project.instagramUrl && (
+                <a
+                  href={project.instagramUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-[#e1306c]/50 bg-[#e1306c]/10 text-[#e1306c] hover:bg-[#e1306c] hover:text-white text-xs font-mono tracking-wider transition-all"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>WATCH ON INSTAGRAM</span>
+                </a>
+              )}
+              {project.videoPreviewUrl && !project.instagramUrl && (
+                <a
+                  href={project.videoPreviewUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-[#d4af37]/40 bg-[#d4af37]/10 text-[#d4af37] hover:bg-[#d4af37] hover:text-black text-xs font-mono tracking-wider transition-all"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>WATCH ON VIMEO</span>
+                </a>
+              )}
+              {project.externalUrl && (
+                <a
+                  href={project.externalUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.05)] hover:border-[#d4af37] hover:text-[#d4af37] text-xs font-mono tracking-wider transition-all"
+                >
+                  <span>VIEW ON PLATFORM</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
+            </div>
           </div>
 
           {/* Navigation Tabs */}

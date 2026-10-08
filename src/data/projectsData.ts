@@ -25,8 +25,8 @@ export const PROJECTS_DATA: Project[] = [
     synopsis: "Farhan P. Zamma wrote, directed, and produced this binge-worthy period crime-thriller. Featuring Munawar Faruqui in his acting debut alongside veteran legends Raza Murad, Gulshan Grover, Krystle D'Souza, and Inamulhaq, First Copy became a sensational hit across Amazon miniTV and MX Player, praised for its visceral period staging, authentic street slang, and edge-of-the-seat tension.",
     youtubeId: "MEohgRcmIFM",
     teaserYoutubeId: "qC8uF9Y552o",
-    posterUrl: "https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1800&q=80",
+    posterUrl: "/images/works/first-copy.png",
+    bannerUrl: "/images/works/first-copy.png",
     stats: {
       episodes: "10 Episodes",
       views: "150M+ Streaming Minutes",
@@ -57,9 +57,11 @@ export const PROJECTS_DATA: Project[] = [
     logline: "The 5-decade saga of Zeenat Sheikh, rising from an abandoned wife to the undisputed matriarch of Mumbai's underworld.",
     synopsis: "Marking the landmark television debut of legendary five-time National Award-winning actress Shabana Azmi, 'Amma' was Farhan Zamma's tour de force that established him as one of India's youngest television producers. Chronicling five decades of Mumbai history from post-partition riots to underworld rule, the series shattered TV production standards with cinematic sets, multi-camera choreography, and period-authentic costume design.",
     youtubeId: "qC8uF9Y552o",
+    vimeoId: "1142049699",
+    videoPreviewUrl: "https://vimeo.com/1142049699",
     externalUrl: "https://www.zee5.com/tv-shows/details/amma/0-6-177",
-    posterUrl: "https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1800&q=80",
+    posterUrl: "/images/works/amma.png",
+    bannerUrl: "/images/works/amma.png",
     stats: {
       episodes: "80+ Episodes",
       reach: "75M+ Viewers Nationwide",
@@ -89,8 +91,10 @@ export const PROJECTS_DATA: Project[] = [
     logline: "Unprecedented, high-risk investigative access into the inferno of the Baghjan blowout—India's most devastating industrial environmental crisis.",
     synopsis: "Farhan P. Zamma helmed this gripping, critically acclaimed two-part Discovery Channel special. Heading a documentary crew right into the hazardous ground zero of the Assam Baghjan oil well blowout, Farhan documented the international blowout specialists, the ecological toll on the Maguri-Motapung wetland, and the resilient villagers caught in the crossfire of towering 1,000-degree flames.",
     youtubeId: "MEohgRcmIFM",
-    posterUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?auto=format&fit=crop&w=1800&q=80",
+    vimeoId: "1141976090",
+    videoPreviewUrl: "https://vimeo.com/1141976090",
+    posterUrl: "/inside-the-burning-thumb.jpg",
+    bannerUrl: "/inside-the-burning-thumb.jpg",
     stats: {
       parts: "2-Part Special",
       network: "Discovery Channel & Discovery+",
@@ -120,8 +124,10 @@ export const PROJECTS_DATA: Project[] = [
     logline: "A coin toss decides every twist, detour, and destination across India in Maruti Suzuki's flagship creator travel campaign.",
     synopsis: "A high-octane travel series directed by Farhan P. Zamma for Maruti Suzuki e-VITARA and NEXA Journeys in partnership with RVCJ Media. Influencers take to the highway with zero predefined itineraries—every crossroad and adventure hinges on a coin flip. From the foothills of Rishikesh to the misty peaks of Meghalaya and historic Pune-Hyderabad passes, Farhan blended cinematic road-movie visuals with viral digital pacing.",
     youtubeId: "qC8uF9Y552o",
-    posterUrl: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&w=1800&q=80",
+    vimeoId: "1210426541",
+    videoPreviewUrl: "https://vimeo.com/1210426541?fl=tl&fe=ec",
+    posterUrl: "/images/works/maruti-flip-the-journey.jpg",
+    bannerUrl: "/images/works/maruti-flip-the-journey.jpg",
     stats: {
       episodes: "5 Episodes + Finale",
       views: "45M+ Organic Impressions",
@@ -179,9 +185,9 @@ export const PROJECTS_DATA: Project[] = [
     aspectRatio: "16:9 Broadcast Master",
     logline: "A heartwarming celebration of family reunion, joy, and festive gifts across India's vibrant heartland.",
     synopsis: "Directed by Farhan P. Zamma, this nationwide festive campaign for TECNO captured the emotional resonance of Indian festivals. Balancing high-energy dance sequences, warm cinematic lighting, and intimate family moments, the commercial aired across prime-time networks and digital video hubs.",
-    youtubeId: "qC8uF9Y552o",
-    posterUrl: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1800&q=80",
+    youtubeId: "PC5SGQGX4OE",
+    posterUrl: "/images/works/tecno-festive.jpg",
+    bannerUrl: "/images/works/tecno-festive.jpg",
     stats: {
       airing: "All Major Hindi & Regional Channels",
       reach: "110M+ TV & Digital Impressions"
@@ -207,8 +213,10 @@ export const PROJECTS_DATA: Project[] = [
     logline: "Transforming dry investor awareness into a soul-stirring, rhythm-charged cinematic Qawwali mehfil.",
     synopsis: "How do you explain demat securities and financial safety to 1.4 billion citizens without sounding like a disclaimer? Farhan P. Zamma directed and produced this vibrant musical spectacle, choreographing a traditional Sufi Qawwali mehfil with live harmoniums, tabla crescendos, and poetic lyricism that transformed complex financial compliance into an earworm melody.",
     youtubeId: "MEohgRcmIFM",
-    posterUrl: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1800&q=80",
+    vimeoId: "1210423326",
+    videoPreviewUrl: "https://vimeo.com/1210423326?fl=tl&fe=ec",
+    posterUrl: "/images/works/sebi-nsdl-qawwali.jpg",
+    bannerUrl: "/images/works/sebi-nsdl-qawwali.jpg",
     stats: {
       views: "25M+ Cross-Platform",
       impact: "National Financial Literacy Benchmark"
@@ -234,8 +242,10 @@ export const PROJECTS_DATA: Project[] = [
     logline: "30 days left in corporate paradise. What happens when an employee has nothing left to lose?",
     synopsis: "Pioneering the explosive microdrama format in India, Farhan Zamma directed 'Notice Period', a razor-sharp corporate thriller designed for mobile screens. Packed with psychological cat-and-mouse tension, corporate sabotage, and high-frequency cliffhangers, each 90-second episode delivers cinematic stakes in rapid-fire succession.",
     youtubeId: "qC8uF9Y552o",
-    posterUrl: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80",
+    vimeoId: "1210422316",
+    videoPreviewUrl: "https://vimeo.com/1210422316?fl=tl&fe=ec",
+    posterUrl: "/images/works/notice-period.png",
+    bannerUrl: "/images/works/notice-period.png",
     stats: {
       episodes: "24 Micro-Episodes",
       completionRate: "78% Binge Rate",
@@ -262,8 +272,10 @@ export const PROJECTS_DATA: Project[] = [
     logline: "Two boardroom titans, one bankrupt empire, and zero ethical boundaries.",
     synopsis: "Directed by Farhan P. Zamma, 'CEO vs CEO' captured the ruthless adrenaline of modern venture capital and corporate boardroom takeovers. Every episode was calibrated with razor-sharp dialogue, cinematic low-angle framing, and gripping power-play reversals.",
     youtubeId: "MEohgRcmIFM",
-    posterUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1800&q=80",
+    vimeoId: "1210417246",
+    videoPreviewUrl: "https://vimeo.com/1210417246",
+    posterUrl: "/images/works/ceo-vs-ceo.png",
+    bannerUrl: "/images/works/ceo-vs-ceo.png",
     stats: {
       views: "42M+ Views",
       shares: "600K+ Social Shares"
@@ -277,6 +289,125 @@ export const PROJECTS_DATA: Project[] = [
     ]
   },
   {
+    id: "omi-the-goat",
+    title: "OMI The GOAT",
+    year: "2024",
+    category: "MICRODRAMA",
+    role: "Director",
+    client: "Jio / Microdrama Originals",
+    format: "Bite-Sized Character Promo / Microdrama",
+    aspectRatio: "9:16 Mobile Native",
+    logline: "High-octane character promo profiling OMI — unapologetic, larger-than-life, and unstoppable.",
+    synopsis: "Directed by Farhan P. Zamma, 'OMI The GOAT' is a high-energy character reveal promo crafted with kinetic editing, vibrant color grading, and razor-sharp punchy dialogue designed for maximum viral engagement on mobile feeds.",
+    youtubeId: "MEohgRcmIFM",
+    vimeoId: "1210415490",
+    videoPreviewUrl: "https://vimeo.com/1210415490?fl=tl&fe=ec",
+    posterUrl: "/omi-the-goat-thumb.jpg",
+    bannerUrl: "/omi-the-goat-thumb.jpg",
+    stats: {
+      episodes: "Character Series",
+      views: "Viral Hit",
+      completionRate: "High Retention"
+    },
+    credits: [
+      { role: "Director", name: "Farhan P. Zamma" },
+      { role: "Platform", name: "Jio / Digital Release" },
+      { role: "Format", name: "Microdrama Character Promo" }
+    ],
+    behindTheScenes: [
+      "Dynamic camera whips and punchy sound design crafted specifically for vertical screen immersion."
+    ]
+  },
+  {
+    id: "hustle-queen-kajal",
+    title: "Hustle Queen KAJAL",
+    year: "2024",
+    category: "MICRODRAMA",
+    role: "Director",
+    client: "Jio / Microdrama Originals",
+    format: "Bite-Sized Character Promo / Microdrama",
+    aspectRatio: "9:16 Mobile Native",
+    logline: "Fierce, ambitious, and refusing to take no for an answer — meet the undisputed Hustle Queen Kajal.",
+    synopsis: "Directed by Farhan P. Zamma, this punchy microdrama promo brings Kajal's relentless ambition and wit front and center with crisp vertical framing and stylish neon-lit aesthetics.",
+    youtubeId: "MEohgRcmIFM",
+    vimeoId: "1210411693",
+    videoPreviewUrl: "https://vimeo.com/1210411693?fl=tl&fe=ec",
+    posterUrl: "/hustle-queen-kajal-thumb.jpg",
+    bannerUrl: "/hustle-queen-kajal-thumb.jpg",
+    stats: {
+      episodes: "Character Series",
+      views: "Trending Promo",
+      completionRate: "90%+ Retention"
+    },
+    credits: [
+      { role: "Director", name: "Farhan P. Zamma" },
+      { role: "Platform", name: "Jio / Digital Release" },
+      { role: "Format", name: "Microdrama Character Promo" }
+    ],
+    behindTheScenes: [
+      "Optimized for high-contrast mobile screen viewing with sharp visual comedy timing."
+    ]
+  },
+  {
+    id: "cringe-king-pratya",
+    title: "Cringe King PRATYA",
+    year: "2024",
+    category: "MICRODRAMA",
+    role: "Director",
+    client: "Jio / Microdrama Originals",
+    format: "Bite-Sized Character Promo / Microdrama",
+    aspectRatio: "9:16 Mobile Native",
+    logline: "Unabashedly eccentric and hilariously chaotic — step into the zany world of Pratya.",
+    synopsis: "Farhan P. Zamma directs 'Cringe King PRATYA', an outrageously energetic vertical promo highlighting comedic timing, vibrant expressions, and viral-ready micro-storytelling.",
+    youtubeId: "MEohgRcmIFM",
+    vimeoId: "1210411299",
+    videoPreviewUrl: "https://vimeo.com/1210411299?fl=tl&fe=ec",
+    posterUrl: "/cringe-king-pratya-thumb.jpg",
+    bannerUrl: "/cringe-king-pratya-thumb.jpg",
+    stats: {
+      episodes: "Character Series",
+      views: "Top Engagement",
+      shares: "Viral Shares"
+    },
+    credits: [
+      { role: "Director", name: "Farhan P. Zamma" },
+      { role: "Platform", name: "Jio / Digital Release" },
+      { role: "Format", name: "Microdrama Character Promo" }
+    ],
+    behindTheScenes: [
+      "Rapid-fire visual gags captured with ultra-responsive handheld rigs."
+    ]
+  },
+  {
+    id: "combine-promo",
+    title: "COMBINE PROMO",
+    year: "2024",
+    category: "MICRODRAMA",
+    role: "Director",
+    client: "Jio Microdrama Series",
+    format: "Full Ensemble Promo / Microdrama",
+    aspectRatio: "9:16 Mobile Native",
+    logline: "The clash of personalities unfolds — all your favorite characters collide in this explosive ensemble promo.",
+    synopsis: "The master ensemble teaser combining OMI, Kajal, and Pratya into one electric showcase. Directed with rapid cross-cutting rhythm and cinematic momentum by Farhan P. Zamma.",
+    youtubeId: "MEohgRcmIFM",
+    vimeoId: "1210410154",
+    videoPreviewUrl: "https://vimeo.com/1210410154?fl=tl&fe=ec",
+    posterUrl: "/combine-promo-thumb.jpg",
+    bannerUrl: "/combine-promo-thumb.jpg",
+    stats: {
+      views: "Ensemble Trailer",
+      reach: "Multi-Platform Push"
+    },
+    credits: [
+      { role: "Director", name: "Farhan P. Zamma" },
+      { role: "Platform", name: "Jio" },
+      { role: "Format", name: "Microdrama Teaser" }
+    ],
+    behindTheScenes: [
+      "Seamless multi-character cross-cutting edited to an adrenaline-pumping tempo."
+    ]
+  },
+  {
     id: "angadia",
     title: "Angadia",
     year: "2023",
@@ -287,9 +418,9 @@ export const PROJECTS_DATA: Project[] = [
     aspectRatio: "2.39:1 Anamorphic",
     logline: "Inside the centuries-old clandestine informal courier system carrying billions in diamonds and cash across Gujarat and Mumbai.",
     synopsis: "A gritty, atmospheric web series tracing the shadowy, trust-bound network of the Angadias. Directed with moody chiaroscuro lighting and breathless pacing, the series explores loyalty, betrayal, and high-stakes criminal syndicates.",
-    youtubeId: "qC8uF9Y552o",
-    posterUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1800&q=80",
+    youtubeId: "glRxRCiYjX0",
+    posterUrl: "/images/works/angadia.jpg",
+    bannerUrl: "/images/works/angadia.jpg",
     stats: {
       status: "Festival Selection",
       genre: "Underworld Investigation"
@@ -314,8 +445,8 @@ export const PROJECTS_DATA: Project[] = [
     logline: "Unearthing the most extraordinary, unbelievable, and inspiring human stories across the length and breadth of India.",
     synopsis: "One of Indian television's most celebrated non-fiction franchises, hosted by Krushna Abhishek on History TV18. Farhan P. Zamma's team spearheaded production across multiple seasons, coordinating field units from remote Himalayan valleys to coastal fishing communities to document extraordinary innovators, daredevils, and record-breakers.",
     youtubeId: "MEohgRcmIFM",
-    posterUrl: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1506461883276-594a12b11cf3?auto=format&fit=crop&w=1800&q=80",
+    posterUrl: "/images/works/omg-yeh-mera-india.png",
+    bannerUrl: "/images/works/omg-yeh-mera-india.png",
     stats: {
       seasons: "Multiple Successful Seasons",
       reach: "100M+ Viewers",
@@ -355,6 +486,33 @@ export const PROJECTS_DATA: Project[] = [
     ],
     behindTheScenes: [
       "Collaborated with colorists in Mumbai and London to formulate custom broadcast-safe ACES color transforms."
+    ]
+  },
+  {
+    id: "narbhakshi",
+    title: "Narbhakshi",
+    year: "2025",
+    category: "MUSIC VIDEO",
+    role: "Director",
+    client: "Salt Media",
+    format: "Cinematic Music Video",
+    aspectRatio: "9:16 / 16:9",
+    logline: "A dark, visceral visual poem exploring raw human emotion.",
+    synopsis: "Directed by Farhan P. Zamma, Narbhakshi is a brooding, high-contrast cinematic music video that plunges into the shadows of the human psyche. Shot with moody chiaroscuro lighting and intense close-up direction, the film creates an unnerving yet hypnotic experience.",
+    youtubeId: "MEohgRcmIFM",
+    instagramUrl: "https://www.instagram.com/reel/DTJN1uMkwaC/",
+    videoPreviewUrl: "https://www.instagram.com/reel/DTJN1uMkwaC/",
+    posterUrl: "/images/works/narbhakshi.png",
+    bannerUrl: "/images/works/narbhakshi.png",
+    stats: {
+      views: "Viral Release 2025"
+    },
+    credits: [
+      { role: "Director", name: "Farhan P. Zamma" },
+      { role: "Production", name: "Salt Media" }
+    ],
+    behindTheScenes: [
+      "High-contrast noir lighting design to amplify emotional intensity."
     ]
   }
 ];

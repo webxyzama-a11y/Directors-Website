@@ -178,6 +178,19 @@ export default function FinalSceneContact() {
             </svg>
             <span>LinkedIn</span>
           </a>
+          <span className="text-[rgba(255,255,255,0.2)]">|</span>
+          <a
+            href="https://vimeo.com/user156268371"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 hover:text-[#1ab7ea] transition-colors"
+            title="Farhan P. Zamma on Vimeo"
+          >
+            <svg className="w-4 h-4 text-[#1ab7ea]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 12.5C4.603 9.913 3.83 8.62 3 8.62c-.13 0-.59.277-1.379.83L.6 8.087c.86-.76 1.705-1.516 2.534-2.273C4.39 4.658 5.422 3.94 6.11 3.87c1.647-.158 2.655.966 3.03 3.372.41 2.607.697 4.23.857 4.868.476 2.162.997 3.242 1.568 3.242.443 0 1.11-.7 2.008-2.1.898-1.4 1.376-2.465 1.432-3.196.127-1.21-.35-1.814-1.432-1.814-.51 0-1.035.115-1.577.35 1.045-3.43 3.043-5.098 5.993-5.003 2.19.066 3.22 1.485 3.088 4.257z"/>
+            </svg>
+            <span>Vimeo</span>
+          </a>
         </div>
 
         {/* Final Frame: CUT. Fade to Black. */}

@@ -656,6 +656,13 @@ export default function FilmStripBrowser({ onSelectProject }: FilmStripBrowserPr
                         </div>
                       </div>
 
+                      {project.videoPreviewUrl && (
+                        <div className="absolute bottom-2 left-3 flex items-center gap-1.5 px-2 py-0.5 rounded bg-black/80 border border-[#d4af37]/50 text-[9px] font-mono text-[#d4af37] backdrop-blur-sm">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#e74c3c] animate-pulse" />
+                          <span>PREVIEW</span>
+                        </div>
+                      )}
+
                       <div className="absolute bottom-2 right-3 flex items-center gap-1.5 text-[9px] font-mono text-[rgba(255,255,255,0.7)]">
                         <Maximize2 className="w-3 h-3 text-[#d4af37]" />
                         <span>BREAK THE FRAME</span>
